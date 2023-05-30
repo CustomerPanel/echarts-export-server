@@ -20,7 +20,7 @@ const mimeReverse = {
     svg: "image/svg+xml"
 };
 
-const port = args.port || 3000;
+const port = args.port || 3001;
 
 echarts.setPlatformAPI({
     // Same with the old setCanvasCreator

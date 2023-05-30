@@ -29,6 +29,8 @@ npm install --unsafe-perm --canvas_binary_host_mirror=https://registry.npmmirror
 # yum install gcc-c++ cairo-devel libjpeg-turbo-devel pango-devel giflib-devel
 ```
 
+If you have any installation issues like node-gyp while canvas installation pelase check: https://github.com/Automattic/node-canvas/wiki
+
 ## Running
 
 ```shell
@@ -53,23 +55,21 @@ npm run dev
 
 **Server related options**
 
-  * `--host`: The hostname to run the server on.
-  * `--port`: The port to listen for incoming requests on. Defaults to `3000`.
+- `--host`: The hostname to run the server on.
+- `--port`: The port to listen for incoming requests on. Defaults to `3000`.
 
-*`-` and `--` can be used interchangeably when using the CLI.*
-
-
+_`-` and `--` can be used interchangeably when using the CLI._
 
 ## HTTP Server
 
 The server accepts the following arguments:
 
-  * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.Defaults to `png`.
-  * `width`: The chart width. Defaults to `600`.
-  * `height`: The chart height. Defaults to `400`.
-  * `base64`: Bool, set to true to get base64 back instead of binary.Defaults to `false`.
-  * `download`: Bool, set to true to send attachment headers on the response.Defaults to `false`.
-  * `option`: A JSON object with options to be passed to `ECharts.setOption(..)`.
+- `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.Defaults to `png`.
+- `width`: The chart width. Defaults to `600`.
+- `height`: The chart height. Defaults to `400`.
+- `base64`: Bool, set to true to get base64 back instead of binary.Defaults to `false`.
+- `download`: Bool, set to true to send attachment headers on the response.Defaults to `false`.
+- `option`: A JSON object with options to be passed to `ECharts.setOption(..)`.
 
 It responds to `application/json`, `Mimetypes`, and URL encoded requests.
 
@@ -92,10 +92,13 @@ Does your Linux server not have Arial or Calibri? ECharts uses the system instal
 Fonts are installed differently depending on your system. Please follow the below guides for font installation on most common systems.
 
 #### OS X
+
 Install your desired fonts with the Font Book app, or place it in /Library/Fonts/ (system) or ~/Library/Fonts/ (user)
 
 #### Linux
+
 Copy or move the TTF file to the `/usr/share/fonts/truetype` (may require sudo privileges):
+
 ```
 mkdir -p /usr/share/fonts/truetype
 cp yourFont.ttf /usr/share/fonts/truetype/
@@ -103,10 +106,13 @@ fc-cache -fv
 ```
 
 #### Windows
+
 Copy or move the TTF file to `C:\Windows\Fonts\`:
+
 ```
 copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 ```
+
 ### Google fonts
 
 If you need Google Fonts in your custom installation, they can be had here:
@@ -116,7 +122,7 @@ Download them, and follow the above instructions for your OS.
 
 ### 中文乱码
 
-直接将Windows的C:\Windows\Fonts\msyh.ttc文件(微软雅黑)拷贝到以下目录，重启生效。
+直接将 Windows 的 C:\Windows\Fonts\msyh.ttc 文件(微软雅黑)拷贝到以下目录，重启生效。
 
 ```shell
 mkdir -p /usr/share/fonts/truetype
@@ -139,30 +145,14 @@ cp msyh.ttf /usr/share/fonts/truetype/
     "animation": false,
     "xAxis": {
       "type": "category",
-      "data": [
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun"
-      ]
+      "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     },
     "yAxis": {
       "type": "value"
     },
     "series": [
       {
-        "data": [
-          820,
-          932,
-          901,
-          934,
-          1290,
-          1330,
-          1720
-        ],
+        "data": [820, 932, 901, 934, 1290, 1330, 1720],
         "type": "line",
         "label": {
           "show": true
@@ -257,9 +247,9 @@ public static void main(String[] args) {
 
 ```json
 {
-    "code": 200,
-    "msg": "success",
-    "data": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."
+  "code": 200,
+  "msg": "success",
+  "data": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."
 }
 ```
 
@@ -273,9 +263,8 @@ public static void main(String[] args) {
 
 [PM2](https://www.npmjs.com/package/pm2)
 
-[ECharts Java](https://github.com/ECharts-Java/ECharts-Java) 
+[ECharts Java](https://github.com/ECharts-Java/ECharts-Java)
 
 ## License
 
 [Apache License 2.0](LICENSE).
-
