@@ -1,4 +1,9 @@
-FROM node:16
+FROM node:16-buster
+
+RUN apt-get update && \
+    apt-get install -y build-essential libcairo2-dev libpango1.0-dev
+
+RUN npm install -g canvas
 # Create app directory
 WORKDIR /app
 COPY . /app
