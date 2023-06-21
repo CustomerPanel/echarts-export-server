@@ -109,7 +109,9 @@ function renderChart(config) {
     const canvas = createCanvas(config.width ? config.width : 600, config.height ? config.height : 400);
     const chart = echarts.init(canvas);
 
-    const chartOptions = setChartOptions(config.option)
+    const optionsReceived = config.option ? config.option : config;
+
+    const chartOptions = setChartOptions(optionsReceived)
 
     // chart.setOption(config.option);
     chart.setOption(chartOptions);
@@ -145,17 +147,12 @@ http.createServer(function (req, res) {
             }));
             return
         }
-        if (!config || !config.option) {
-            res.end(JSON.stringify({
-                code: 400,
-                msg: 'request parameter "config" format invalid, option is required!',
-                data: null
-            }));
-            return
-        }
+        // defaultConfig = {width: 600, height:400, type: 'png',formatType: 'image/png'}
+
+        // config = {...config, ...defaultConfig}
 
         // width: The chart width
-        config.width = config.width || 600;
+        config.width = config.config || 600;
         // height: The chart height
         config.height = config.height || 400;
         // type: The format: png, jpeg, pdf, svg.

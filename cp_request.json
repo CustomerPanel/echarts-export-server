@@ -1,0 +1,47 @@
+curl -H "Content-Type: application/json" \
+-X POST localhost:3001 \
+-o chart.png \
+-d '{
+	"legend": {
+		"bottom": "0",
+		"type": "scroll",
+		"textStyle": {
+			"fontSize": 10
+		},
+		"show": true,
+		"data": ["Singapore"],
+		"selectedMode": false
+	},
+	"xAxis": {
+		"type": "category",
+		"data": ["2023-01-01", "2023-02-01", "2023-03-01", "2023-04-01", "2023-05-01", "2023-06-01"]
+	},
+	"yAxis": {
+		"type": "value"
+	},
+	"series": [
+    {
+		"name": "Singapore",
+		"group": "Payment Succeeded",
+		"type": "line",
+		"data": [0, 0, 30510, 17426, 0, 0],
+		"average": 7989.33,
+		"total": 47936,
+		"trends": [0, 0, 100, -42.88, -100, 0],
+		"lineStyle": {
+			"color": "#9173FF"
+		},
+		"itemStyle": {
+			"color": "#9173FF"
+		},
+		"tooltip": {
+			"borderColor": "#DEE0F4"
+		},
+		"padding": [8, 8, 8, 8],
+		"selected": false,
+		"label": {
+			"show": false,
+			"position": "top"
+		}
+	  }]
+}'
