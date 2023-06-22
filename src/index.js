@@ -20,6 +20,8 @@ const mimeReverse = {
     svg: "image/svg+xml"
 };
 
+let chartData = {}
+
 const port = args.port || 3001;
 
 echarts.setPlatformAPI({
@@ -66,13 +68,56 @@ function processConfig(request, response, callback) {
     }
 }
 
+function setChartOptions(props) {
+
+    chartData.xAxis = props.xAxis.data;
+    chartData.legendData = props.legend && props.legend.data ? props.legend.data : null;
+    chartData.allData = props.series;
+
+    if (chartData.allData.length > 6) {
+      chartData.series = props.series.slice(0, 5);
+    } else {
+      chartData.series = props.series;
+    }
+
+    return {
+        backgroundColor: "#fff",
+        animation: false,
+        legend: chartData.legendData ? {
+          bottom: "0",
+          type: "scroll",
+          textStyle: {
+            fontSize: 10,
+          },
+          show: true,
+          data: chartData.legendData,
+          selectedMode: false,
+        }: null,
+        xAxis: {
+          type: "category",
+          data: chartData.xAxis,
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: chartData.series
+      };
+}
+
 function renderChart(config) {
     let result;
-    const canvas = createCanvas(config.width, config.height);
+    const canvas = createCanvas(config.width ? config.width : 600, config.height ? config.height : 400);
     const chart = echarts.init(canvas);
-    chart.setOption(config.option);
-    if (config.base64) {
-        const base64 = canvas.toDataURL(config.formatType);
+
+    const optionsReceived = config.option ? config.option : config;
+
+    const chartOptions = setChartOptions(optionsReceived)
+
+    // chart.setOption(config.option);
+    chart.setOption(chartOptions);
+
+    if (config.base64 ? config.base64 : false) {
+        const base64 = canvas.toDataURL(config.formatType ? config.formatType : 'png');
         //  const base64=chart.getDataURL();
         result = JSON.stringify({
             code: 200,
@@ -80,7 +125,7 @@ function renderChart(config) {
             data: base64
         });
     } else {
-        result = canvas.toBuffer(config.formatType);
+        result = canvas.toBuffer(config.formatType ? config.formatType : 'png');
     }
     chart.dispose();
 
@@ -98,14 +143,6 @@ http.createServer(function (req, res) {
             res.end(JSON.stringify({
                 code: 400,
                 msg: 'request parameter "config" format invalid, is not JSON!',
-                data: null
-            }));
-            return
-        }
-        if (!config || !config.option) {
-            res.end(JSON.stringify({
-                code: 400,
-                msg: 'request parameter "config" format invalid, option is required!',
                 data: null
             }));
             return
@@ -147,7 +184,7 @@ http.createServer(function (req, res) {
         // "Content-Type": "image/jpeg"
         // "Content-Type": "application/json;charset=UTF-8"
         res.setHeader('Content-Type', config.contentType);
-        if (config.download) {
+        if (config.download ? config.download : false) {
             res.setHeader('Content-Disposition', 'attachment; filename="chart.' + config.type + '"');
         }
 
