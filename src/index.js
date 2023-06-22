@@ -147,12 +147,9 @@ http.createServer(function (req, res) {
             }));
             return
         }
-        // defaultConfig = {width: 600, height:400, type: 'png',formatType: 'image/png'}
-
-        // config = {...config, ...defaultConfig}
 
         // width: The chart width
-        config.width = config.config || 600;
+        config.width = config.width || 600;
         // height: The chart height
         config.height = config.height || 400;
         // type: The format: png, jpeg, pdf, svg.
