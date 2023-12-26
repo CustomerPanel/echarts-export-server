@@ -7,45 +7,79 @@ curl -H "Content-Type: application/json" \
   "height": 400,
   "base64": false,
   "download": false,
-
-
   "option": {
     "backgroundColor": "#fff",
     "animation": false,
     "xAxis": {
       "type": "category",
-      "data": [
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
-        "Sun"
-      ]
+      "data": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     },
     "yAxis": {
       "type": "value"
     },
     "series": [
       {
-        "data": [
-          820,
-          932,
-          901,
-          934,
-          1290,
-          1330,
-          1720
-        ],
+        "selected": true,
+        "name": "Argentina",
+        "group": "Payment Succeeded",
+        "data": [861, 3277, 1424, 3783, 3928, 0, 200],
         "type": "line",
         "label": {
-          "show": true
+          "show": true,
+          "position": "top"
+        }
+      },
+      {
+        "selected": true,
+        "name": "Colombia",
+        "group": "Payment Succeeded",
+        "data": [8661, 3277, 14624, 3783, 3928, 0, 200],
+        "type": "bar",
+        "label": {
+          "show": true,
+          "position": "top"
+        }
+      },
+      {
+        "selected": false,
+        "name": "Venezuela",
+        "group": "Payment Succeeded",
+        "data": [111, 444, 555, 2233, 2255, 66, 888],
+        "type": "bar",
+        "label": {
+          "show": true,
+          "position": "top"
         }
       }
-    ]
-
-
-
+    ],
+    "format": {
+      "decimal": ".",
+      "separator": ",",
+      "prefix": "$ ",
+      "suffix": "",
+      "precision": 2,
+      "nullValue": "",
+      "masked": false
+    },
+    "lineStyle": {
+      "color": "#9173FF"
+    },
+    "itemStyle": {
+      "color": "#9173FF"
+    },
+    "tooltip": {
+      "borderColor": "#DEE0F4"
+    },
+    "padding": [8, 8, 8, 8],
+    "label": {
+      "show": false,
+      "position": "top"
+    },
+    "legend": {
+      "orient": "vertical",
+      "right": 10,
+      "top": "center",
+      "data": ["Argentina", "Colombia","Venezuela"]
+    }
   }
 }'
