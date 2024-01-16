@@ -35,7 +35,7 @@
 									fill="#00851D"
 								/>
 							</svg>
-							+<%= item.metricOrEvents[0].growth %> Growth
+							+<%= item.metricOrEvents[0].growth %>% Growth
 						</h3>
 						<% } %> <% if (item.metricOrEvents[0].growth < 0) { %>
 						<h3 class="subtitle negative">
@@ -54,11 +54,11 @@
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
 
-							<%= item.metricOrEvents[0].growth %> Growth
+							<%= item.metricOrEvents[0].growth %>% Growth
 						</h3>
 						<% } %> <% if (item.metricOrEvents[0].growth === 0) { %>
 						<h3 class="subtitle">
-							<%= item.metricOrEvents[0].growth %> Growth
+							<%= item.metricOrEvents[0].growth %>% Growth
 						</h3>
 						<% } %>
 					</div>
@@ -90,7 +90,7 @@
 									fill="#00851D"
 								/>
 							</svg>
-							+<%= country.growth %> Growth
+							+<%= country.growth %>% Growth
 						</h3>
 						<% } %> <% if (country.growth < 0) { %>
 						<h3 class="subtitle negative">
@@ -109,10 +109,10 @@
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
 
-							<%= country.growth %> Growth
+							<%= country.growth %>% Growth
 						</h3>
 						<% } %> <% if (country.growth === 0) { %>
-						<h3 class="subtitle"><%= country.growth %> &nbsp; Growth</h3>
+						<h3 class="subtitle"><%= country.growth %>% &nbsp; Growth</h3>
 						<% } %>
 					</div>
 					<% } %> <% }):
@@ -137,7 +137,7 @@
 									fill="#00851D"
 								/>
 							</svg>
-							+<%= metricOrEvent.growth %> Growth
+							+<%= metricOrEvent.growth %>% Growth
 						</h3>
 						<% } %> <% if (metricOrEvent.growth < 0) { %>
 						<h3 class="subtitle negative">
@@ -156,10 +156,10 @@
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
 
-							<%= metricOrEvent.growth %> Growth
+							<%= metricOrEvent.growth %>% Growth
 						</h3>
 						<% } %> <% if (metricOrEvent.growth === 0) { %>
-						<h3 class="subtitle"><%= metricOrEvent.growth %> &nbsp; Growth</h3>
+						<h3 class="subtitle"><%= metricOrEvent.growth %>% &nbsp; Growth</h3>
 						<% } %>
 					</div>
 					<% } %> <% }) %> <% if (item.metricOrEvents.length >3 ||
@@ -191,8 +191,7 @@
 				</tr>
 
 				<% if (item.countries.length > 0) { %> <%
-				item.countries.forEach(function (country, index) { %> <% if (index >= 2)
-				{ %>
+				item.countries.forEach(function (country, index) { %>
 				<tr>
 					<td><%= country.name %></td>
 					<% if (country.growth > 0) { %>
@@ -211,9 +210,9 @@
 								fill="#00851D"
 							/>
 						</svg>
-						<%= country.growth %>
+						<%= country.growth %>%
 					</td>
-					<% } else if (metricOrEvent.growth < 0) { %>
+					<% } else if (country.growth < 0) { %>
 					<td class="negative">
 						<svg
 							class="growth-icon"
@@ -228,14 +227,14 @@
 								fill="#D52E00"
 							/>
 							<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" /></svg
-						><%= country.growth %>
+						><%= country.growth %>%
 					</td>
 					<% } else { %>
-					<td><%= country.growth %></td>
+					<td><%= country.growth %>%</td>
 					<% } %>
 				</tr>
-				<% } %> <% }); %> <% } else { %> <% item.metricOrEvents.forEach(function
-				(metricOrEvent, index) { %> <% if (index >= 3) { %>
+				<% }); %> <% } else { %> <% item.metricOrEvents.forEach(function
+				(metricOrEvent, index) { %>
 				<tr>
 					<td><%= metricOrEvent.name %></td>
 					<% if (metricOrEvent.growth > 0) { %>
@@ -254,7 +253,7 @@
 								fill="#00851D"
 							/>
 						</svg>
-						<%= metricOrEvent.growth %>
+						<%= metricOrEvent.growth %>%
 					</td>
 					<% } else if (metricOrEvent.growth < 0) { %>
 					<td class="negative">
@@ -271,13 +270,13 @@
 								fill="#D52E00"
 							/>
 							<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" /></svg
-						>& <%= metricOrEvent.growth %>
+						>& <%= metricOrEvent.growth %>%
 					</td>
 					<% } else { %>
-					<td><%= metricOrEvent.growth %></td>
+					<td><%= metricOrEvent.growth %>%</td>
 					<% } %>
 				</tr>
-				<% } %> <% }); %> <% } %>
+				<% }); %> <% } %>
 			</table>
 			<% } %>
 		</div>
