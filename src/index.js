@@ -240,6 +240,7 @@ http
 					nodeHtmlToImage({
 						output: './image.png',
 						html: '<html><body>' + renderedHtml + '</body></html>',
+						puppeteerArgs: {args: ['--no-sandbox']}
 					}).then(() => {
 						// Read the image file
 						fs.readFile('./image.png', function (err, data) {
