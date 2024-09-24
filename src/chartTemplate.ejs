@@ -16,10 +16,10 @@
 					<h2 class="title"><%= item.title %></h2>
 					<% if (item.countries.length === 0 && item.metricOrEvents.length >=
 					1){ %>
-
 					<div class="growth-line">
 						<h3 class="last-value-data">
-							<%= item.lastValue? item.lastValue:'No data'%>
+							<%= item.metricOrEvents[0].last_value === "undefined" ? "No data"
+							: item.metricOrEvents[0].last_value %>
 						</h3>
 						<% if (item.metricOrEvents[0].growth > 0) { %>
 						<h3 class="subtitle positive center">
@@ -90,7 +90,9 @@
 				<div class="divider"></div>
 
 				<div class="right-side-chart-header">
-					<span class="date-range"><%= item.date?item.date:'No data' %></span>
+					<span class="date-range"
+						><%= item.date_range?item.date_range:'No data' %>
+					</span>
 				</div>
 			</div>
 

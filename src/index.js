@@ -139,7 +139,6 @@ function numbersFormatterForChart(value, format) {
 		formattedValue = num.toFixed(format.precision)
 	}
 
-	// Aplicar separadores y prefijos/sufijos
 	const parts = formattedValue.split('.')
 	const integerPart = parts[0]
 	const decimalPart = parts[1]
@@ -155,6 +154,28 @@ function numbersFormatterForChart(value, format) {
 		return `${format.prefix}${integerWithSeparator}${format.suffix}`
 	}
 }
+
+function numbersFormatter(value, format) {
+	if (!format) {
+		return `${value}`
+	}
+	const num = Number(value)
+	const formattedValue = num.toFixed(format.precision).toString()
+	const parts = formattedValue.split('.')
+	const integerPart = parts[0]
+	const decimalPart = parts[1]
+
+	const integerWithSeparator = integerPart.replace(
+		/\B(?=(\d{3})+(?!\d))/g,
+		format.separator
+	)
+	if (decimalPart) {
+		return `${format.prefix}${integerWithSeparator}${format.decimal}${decimalPart}${format.suffix}`
+	} else {
+		return `${format.prefix}${integerWithSeparator}`
+	}
+}
+
 function renderChart(config) {
 	// Define un factor de escala, por ejemplo 2x para mejorar la resolución
 	const scaleFactor = 2
@@ -192,12 +213,17 @@ function renderChart(config) {
 
 function formatXAxisData(datesString, groupByDate) {
 	let newXAxisData = []
-
 	if (datesString.length > 0) {
 		if (groupByDate === 'monthly') {
 			newXAxisData = datesString.map((dateString) => {
 				const date = parseISO(dateString)
 				const formattedDate = format(date, 'MMM yyyy')
+				return formattedDate
+			})
+		} else if (groupByDate === 'yearly') {
+			newXAxisData = datesString.map((dateString) => {
+				const date = parseISO(dateString)
+				const formattedDate = format(date, 'yyyy')
 				return formattedDate
 			})
 		} else {
@@ -269,9 +295,6 @@ http
 				if (config.base64) {
 					config.contentType = 'application/json;charset=UTF-8'
 				}
-				// "Content-Type": "image/png"
-				// "Content-Type": "image/jpeg"
-				// "Content-Type": "application/json;charset=UTF-8"
 				res.setHeader('Content-Type', config.contentType)
 				if (config.download ? config.download : false) {
 					res.setHeader(
@@ -281,6 +304,14 @@ http
 				}
 				let result
 				try {
+					config.xAxis[0] = {
+						...config.xAxis[0],
+						axisLabel: {
+							formatter: function (value) {
+								return formatXAxisData(value, config.groupByDate)
+							},
+						},
+					}
 					result = renderChart(config)
 				} catch (e) {
 					console.error('Error: Canvas rendering failed!' + e.message)
@@ -299,6 +330,16 @@ http
 				const dashboardData = JSON.parse(req.config)
 				let series = dashboardData.series
 				series.forEach((serie, index) => {
+					serie.metricOrEvents.forEach((metric, indexMetric) => {
+						if (metric.format.suffix === '%') {
+							metric.last_value = metric.last_value / 100
+						}
+						let newLastValue = numbersFormatter(
+							metric.last_value,
+							metric.format
+						)
+						series[index].metricOrEvents[indexMetric].last_value = newLastValue
+					})
 					if (serie.countries.length > 0) {
 						let formattedCountriesSeries = []
 						serie.countries.forEach((country) => {
