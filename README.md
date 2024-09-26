@@ -47,6 +47,10 @@ npm run logs
 npm run foreground
 # dev
 npm run dev
+
+#Docker
+docker build . -t echarts-export-server
+docker run --name echarts -p 3001:3001 echarts-export-server
 ```
 
 ## Command Line Arguments
