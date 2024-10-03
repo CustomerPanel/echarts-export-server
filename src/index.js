@@ -119,15 +119,10 @@ function numbersFormatterForChart(value, format) {
 	if (!format) {
 		return `${value}`
 	}
-
 	let num = Number(value)
-
-	// Redondear a números enteros si son mayores a 1000
 	if (Math.abs(num) >= 1000) {
 		num = Math.round(num)
 	}
-
-	// Aplicar abreviaturas
 	let formattedValue
 	if (Math.abs(num) >= 1_000_000_000) {
 		formattedValue = (num / 1_000_000_000).toFixed(0) + 'B'
@@ -177,12 +172,7 @@ function numbersFormatter(value, format) {
 }
 
 function renderChart(config) {
-	// Define un factor de escala, por ejemplo 2x para mejorar la resolución
 	const scaleFactor = 2
-	const width = (config.width || 600) * scaleFactor
-	const height = (config.height || 400) * scaleFactor
-
-	// Crear el canvas con el tamaño escalado
 	const canvas = createCanvas(
 		config.width ? config.width : 600,
 		config.height ? config.height : 400
@@ -238,6 +228,44 @@ function formatXAxisData(datesString, groupByDate) {
 	return newXAxisData
 }
 
+function formatSeries(series) {
+	const newSeries = series.map((serie, index) => {
+		const newSerie = {
+			...serie,
+			lineStyle: {
+				width: 2,
+			},
+			label: {
+				position: serie?.label.position,
+				show: true,
+				color: serie?.trends[index] > 0 ? 'green' : 'red',
+				align: 'center',
+
+				formatter: function (params) {
+					const dataIndex = params.dataIndex
+					const trendValue = parseFloat(serie?.trends[dataIndex].toFixed(2))
+					return trendValue > 0
+						? `{a|+${trendValue}%}`
+						: trendValue < 0
+						? `{b|${trendValue}%}`
+						: `{c|${trendValue}%}`
+				},
+				rich: {
+					a: {
+						color: 'green',
+					},
+					b: {
+						color: 'red',
+					},
+					c: { color: 'black' },
+				},
+			},
+		}
+		return newSerie
+	})
+	return newSeries
+}
+
 const chartTemplate = fs.readFileSync('src/chartTemplate.ejs', 'utf-8')
 
 http
@@ -252,6 +280,10 @@ http
 				let config
 				try {
 					config = JSON.parse(req.config)
+					if (config.showGrowthRate) {
+						const newSeries = formatSeries(config.series)
+						config.series = newSeries
+					}
 				} catch (e) {
 					res.end(
 						JSON.stringify({
@@ -263,17 +295,12 @@ http
 					return
 				}
 
-				// width: The chart width
 				config.width = config.width || 600
-				// height: The chart height
 				config.height = config.height || 400
-				// type: The format: png, jpeg, pdf, svg.
 				config.type = config.type || 'png'
 				config.formatType = 'image/png'
 				config.contentType = 'image/png'
-				// base64: Bool, set to true to get base64 back instead of binary.
 				config.base64 = config.base64 === true
-				// download: Bool, set to true to send attachment headers on the response.
 				config.download = config.download === true
 				switch (config.type) {
 					case 'png':
@@ -362,13 +389,11 @@ http
 						html: '<html><body>' + renderedHtml + '</body></html>',
 						puppeteerArgs: { args: ['--no-sandbox'] },
 					}).then(() => {
-						// Read the image file
 						fs.readFile('./image.png', function (err, data) {
 							if (err) {
 								console.error('Error reading file: ' + err.message)
 								res.status(500).end()
 							} else {
-								// Send the image content in the response
 								res.writeHead(200, { 'Content-Type': 'image/png' })
 								res.end(data)
 								console.log('The image was created and sent successfully!')
