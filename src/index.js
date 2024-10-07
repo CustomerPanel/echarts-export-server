@@ -280,7 +280,7 @@ http
 				let config
 				try {
 					config = JSON.parse(req.config)
-					if (config.showGrowthRate) {
+					if (config.growthRate) {
 						const newSeries = formatSeries(config.series)
 						config.series = newSeries
 					}
