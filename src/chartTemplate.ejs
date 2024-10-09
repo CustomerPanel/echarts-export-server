@@ -16,15 +16,16 @@
 					<h2 class="title"><%= item.title %></h2>
 					<% if (item.countries.length === 0 && item.metricOrEvents.length >=
 					1){ %>
-					<div class="growth-line">
+					<div class="trend-line">
 						<h3 class="last-value-data">
 							<%= item.metricOrEvents[0].last_value === "undefined" ? "No data"
 							: item.metricOrEvents[0].last_value %>
 						</h3>
-						<% if (item.metricOrEvents[0].growth > 0) { %>
+						<% if (item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] > 0) { %>
 						<h3 class="subtitle positive center">
 							<svg
-								class="growth-icon-subtitle"
+								class="trend-icon-subtitle"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -36,14 +37,16 @@
 									fill="#00851D"
 								/>
 							</svg>
-							<span class="subtitule-growth"
-								>+<%= item.metricOrEvents[0].growth %>% Growth
+							<span class="subtitule-trend"
+								>+<%= item.metricOrEvents[0].trends[
+								item.metricOrEvents[0].trends.length -1] %>%
 							</span>
 						</h3>
-						<% } %> <% if (item.metricOrEvents[0].growth < 0) { %>
+						<% } %> <% if (item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] < 0) { %>
 						<h3 class="subtitle negative center">
 							<svg
-								class="growth-icon-subtitle"
+								class="trend-icon-subtitle"
 								width="20"
 								height="20"
 								viewBox="0 0 16 16"
@@ -56,14 +59,16 @@
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
 
-							<span class="subtitule-growth">
-								<%= item.metricOrEvents[0].growth %>% Growth
+							<span class="subtitule-trend">
+								<%= item.metricOrEvents[0].trends[
+								item.metricOrEvents[0].trends.length -1] %>%
 							</span>
 						</h3>
-						<% } %> <% if (item.metricOrEvents[0].growth === 0) { %>
+						<% } %> <% if (item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] === 0) { %>
 						<h3 class="subtitle center">
 							<svg
-								class="growth-icon-subtitle"
+								class="trend-icon-subtitle"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -78,8 +83,9 @@
 									stroke-linecap="round"
 								/>
 							</svg>
-							<span class="subtitule-growth">
-								<%= item.metricOrEvents[0].growth %>% Growth
+							<span class="subtitule-trend">
+								<%= item.metricOrEvents[0].trends[
+								item.metricOrEvents[0].trends.length -1] %>%
 							</span>
 						</h3>
 						<% } %>
@@ -103,12 +109,12 @@
 			/>
 			<% if ((item.countries.length > 2 && item.countries.length > 0) ||
 			(item.metricOrEvents.length > 3 && item.countries.length === 0)) { %>
-			<table class="growth-table">
+			<table class="trend-table">
 				<tr>
 					<td class="td-header">
 						<%= item.countries.length > 0 ? "Country" : "Metric/Event" %>
 					</td>
-					<td class="td-header td-growth">Growth</td>
+					<td class="td-header td-trend">Trends</td>
 				</tr>
 
 				<% if (item.countries.length > 0) { %> <%
@@ -116,12 +122,12 @@
 
 				<tr>
 					<td><%= country.name %></td>
-					<% if (country && country.growth > 0) { %>
+					<% if (country && country.trends[country.trends.length - 1] > 0) { %>
 
-					<td class="positive td-growth">
-						<div class="div-growth">
+					<td class="positive td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -133,14 +139,15 @@
 									fill="#00851D"
 								/>
 							</svg>
-							<%= country.growth %>%
+							<%= country.trends[country.trends.length - 1] %>%
 						</div>
 					</td>
-					<% } else if (country && country.growth < 0) { %>
-					<td class="negative td-growth">
-						<div class="div-growth">
+					<% } else if (country && country.trends[country.trends.length - 1] <
+					0) { %>
+					<td class="negative td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 16 16"
@@ -153,14 +160,14 @@
 								/>
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
-							<%= country.growth %>%
+							<%= country.trends[country.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } else { %>
-					<td class="td-growth">
-						<div class="div-growth">
+					<td class="td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -175,7 +182,7 @@
 									stroke-linecap="round"
 								/>
 							</svg>
-							<%= country.growth %>%
+							<%= country.trends[country.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } %>
@@ -184,11 +191,11 @@
 				(metricOrEvent, index) { %>
 				<tr>
 					<td><%= metricOrEvent.name %></td>
-					<% if (metricOrEvent.growth > 0) { %>
-					<td class="positive td-growth">
-						<div class="div-growth">
+					<% if (metricOrEvent.trends[metricOrEvent.trends.length - 1] > 0) { %>
+					<td class="positive td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -201,14 +208,15 @@
 									fill="#00851D"
 								/>
 							</svg>
-							<%= metricOrEvent.growth %>%
+							<%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
 						</div>
 					</td>
-					<% } else if (metricOrEvent.growth < 0) { %>
-					<td class="negative td-growth">
-						<div class="div-growth">
+					<% } else if (metricOrEvent.trends[metricOrEvent.trends.length - 1]<
+					0) { %>
+					<td class="negative td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 16 16"
@@ -221,14 +229,14 @@
 								/>
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
-							<%= metricOrEvent.growth %>%
+							<%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } else { %>
-					<td class="td-growth">
-						<div class="div-growth">
+					<td class="td-trend">
+						<div class="div-trend">
 							<svg
-								class="growth-icon"
+								class="trend-icon"
 								width="20"
 								height="20"
 								viewBox="0 0 20 20"
@@ -242,7 +250,7 @@
 									stroke-width="1.5"
 									stroke-linecap="round"
 								/></svg
-							><%= metricOrEvent.growth %>%
+							><%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } %>
