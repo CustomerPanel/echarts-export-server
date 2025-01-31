@@ -368,9 +368,7 @@ http
 					})
 					if (serie.countries.length > 0) {
 						let formattedCountriesSeries = []
-						let counter = 0
 						serie.countries.forEach((country) => {
-							counter++
 							formattedCountriesSeries.push(
 								serie.metricOrEvents.filter(
 									(metric) => metric.name == country
