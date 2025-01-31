@@ -116,9 +116,9 @@
 					</td>
 					<td class="td-header td-trend">Trends</td>
 				</tr>
-
 				<% if (item.countries.length > 0) { %> <%
-				item.countries.forEach(function (country, index) { %>
+				item.countries.forEach(function (country, index) { if(!country){ return}
+				%>
 
 				<tr>
 					<td><%= country.name %></td>

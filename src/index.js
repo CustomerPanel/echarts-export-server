@@ -172,7 +172,6 @@ function numbersFormatter(value, format) {
 }
 
 function renderChart(config) {
-	const scaleFactor = 2
 	const canvas = createCanvas(
 		config.width ? config.width : 600,
 		config.height ? config.height : 400
@@ -265,7 +264,6 @@ function formatSeries(series) {
 	})
 	return newSeries
 }
-
 const chartTemplate = fs.readFileSync('src/chartTemplate.ejs', 'utf-8')
 
 http
@@ -356,6 +354,7 @@ http
 			processConfig(req, res, function () {
 				const dashboardData = JSON.parse(req.config)
 				let series = dashboardData.series
+
 				series.forEach((serie, index) => {
 					serie.metricOrEvents.forEach((metric, indexMetric) => {
 						if (metric.format.suffix === '%') {
@@ -369,7 +368,9 @@ http
 					})
 					if (serie.countries.length > 0) {
 						let formattedCountriesSeries = []
+						let counter = 0
 						serie.countries.forEach((country) => {
+							counter++
 							formattedCountriesSeries.push(
 								serie.metricOrEvents.filter(
 									(metric) => metric.name == country
