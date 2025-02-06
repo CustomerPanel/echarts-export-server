@@ -1,8 +1,8 @@
-import { init } from "@sentry/node";
-import { nodeProfilingIntegration } from "@sentry/profiling-node";
+const Sentry = require("@sentry/node");
+const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 // Ensure to call this before requiring any other modules!
-init({
+Sentry.init({
   dsn: process.env.SENTRY_DSN,
   integrations: [
     // Add our Profiling integration
