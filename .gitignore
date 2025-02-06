@@ -31,3 +31,4 @@ tmp/
 .classpath
 .metadata
 out/
+.env
