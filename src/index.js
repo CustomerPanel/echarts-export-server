@@ -11,6 +11,14 @@ const args = process.argv
 const styles = fs.readFileSync('src/chartTemplateStyles.css', 'utf-8')
 const { format, parseISO, parse } = require('date-fns')
 
+const Sentry = require("@sentry/node");
+
+try {
+  foo();
+} catch (e) {
+  Sentry.captureException(e);
+}
+
 const mime = {
 	'image/png': 'png',
 	'image/jpeg': 'jpeg',
