@@ -1,4 +1,4 @@
-require("../instrument");
+require('../instrument')
 
 var http = require('http')
 var url = require('url')
@@ -116,24 +116,34 @@ function setChartOptions(props) {
 		series: newSeries,
 	}
 }
+function formatNumber(num, divisor, suffix) {
+	const divided = num / divisor
+	let decimalPlaces = 0
+
+	if (divided % 1 !== 0) {
+		decimalPlaces = (divided * 10) % 1 === 0 ? 1 : 2
+	}
+
+	return divided.toFixed(decimalPlaces) + suffix
+}
 
 function numbersFormatterForChart(value, format) {
 	if (!format) {
 		return `${value}`
 	}
-	let num = Number(value)
-	if (Math.abs(num) >= 1000) {
-		num = Math.round(num)
-	}
+
+	const num = Number(value)
+
 	let formattedValue
 	if (Math.abs(num) >= 1_000_000_000) {
-		formattedValue = (num / 1_000_000_000).toFixed(0) + 'B'
+		formattedValue = formatNumber(num, 1_000_000_000, 'B')
 	} else if (Math.abs(num) >= 1_000_000) {
-		formattedValue = (num / 1_000_000).toFixed(0) + 'M'
+		formattedValue = formatNumber(num, 1_000_000, 'M')
 	} else if (Math.abs(num) >= 1_000) {
-		formattedValue = (num / 1_000).toFixed(0) + 'k'
+		formattedValue = formatNumber(num, 1_000, 'k')
 	} else {
-		formattedValue = num.toFixed(format.precision)
+		formattedValue =
+			num % 1 === 0 ? num.toString() : num.toFixed(format.precision)
 	}
 
 	const parts = formattedValue.split('.')
