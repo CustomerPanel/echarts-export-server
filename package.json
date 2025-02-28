@@ -14,7 +14,7 @@
     "dev": "nodemon ./src/index.js"
   },
   "dependencies": {
-    "@sentry/node": "^8.54.0",
+    "@sentry/node": "^9.1.0",
     "@sentry/profiling-node": "^8.54.0",
     "canvas": "^2.11.2",
     "date-fns": "^3.6.0",
