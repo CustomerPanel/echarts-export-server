@@ -9,20 +9,23 @@
 		<title>Dashboard Title</title>
 	</head>
 	<body>
-		<% series.forEach(function(item) { %>
+		<% series.forEach(function(item,index) { %>
 		<div class="chart-container">
 			<div class="chart-header">
 				<div class="left-side-chart-header">
 					<h2 class="title"><%= item.title %></h2>
-					<% if (item.countries.length === 0 && item.metricOrEvents.length >=
-					1){ %>
+					<% if (item.propertyValues.length === 0 && item.metricOrEvents.length
+					>= 1){ %>
 					<div class="trend-line">
 						<h3 class="last-value-data">
 							<%= item.metricOrEvents[0].last_value === "undefined" ? "No data"
 							: item.metricOrEvents[0].last_value %>
 						</h3>
-						<% if (item.metricOrEvents[0].trends[
-						item.metricOrEvents[0].trends.length -1] > 0) { %>
+						<% if ((item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] > 0 &&
+						!item?.invertGrowthColors)||(item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] < 0 &&
+						item?.invertGrowthColors)) { %>
 						<h3 class="subtitle positive center">
 							<svg
 								class="trend-icon-subtitle"
@@ -42,8 +45,11 @@
 								item.metricOrEvents[0].trends.length -1] %>%
 							</span>
 						</h3>
-						<% } %> <% if (item.metricOrEvents[0].trends[
-						item.metricOrEvents[0].trends.length -1] < 0) { %>
+						<% } %> <% if ((item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] < 0 &&
+						!item?.invertGrowthColors)||(item.metricOrEvents[0].trends[
+						item.metricOrEvents[0].trends.length -1] > 0 &&
+						item?.invertGrowthColors)) { %>
 						<h3 class="subtitle negative center">
 							<svg
 								class="trend-icon-subtitle"
@@ -107,23 +113,23 @@
 				src="<%= item.imageUrl %>"
 				alt="<%= item.title %>"
 			/>
-			<% if ((item.countries.length > 2 && item.countries.length > 0) ||
-			(item.metricOrEvents.length > 3 && item.countries.length === 0)) { %>
+			<% if (item.metricOrEvents.length > 1) { %>
 			<table class="trend-table">
 				<tr>
 					<td class="td-header">
-						<%= item.countries.length > 0 ? "Country" : "Metric/Event" %>
+						<%=series[index].propertyValues &&
+						series[index].propertyValues.length > 0 ? series[index].groupBy :
+						"Metric/Event" %>
 					</td>
 					<td class="td-header td-trend">Trends</td>
 				</tr>
-				<% if (item.countries.length > 0) { %> <%
-				item.countries.forEach(function (country, index) { if(!country){ return}
-				%>
-
+				<% item.metricOrEvents.forEach(function (event, index) { %>
 				<tr>
-					<td><%= country.name %></td>
-					<% if (country && country.trends[country.trends.length - 1] > 0) { %>
-
+					<td><%= event.name %></td>
+					<% if ((event && event.trends[event.trends.length - 1] > 0 &&
+					!event?.invertGrowthColors) || (event &&
+					event.trends[event.trends.length - 1] < 0 &&
+					event?.invertGrowthColors)) { %>
 					<td class="positive td-trend">
 						<div class="div-trend">
 							<svg
@@ -139,11 +145,13 @@
 									fill="#00851D"
 								/>
 							</svg>
-							<%= country.trends[country.trends.length - 1] %>%
+							<%= event.trends[event.trends.length - 1] %>%
 						</div>
 					</td>
-					<% } else if (country && country.trends[country.trends.length - 1] <
-					0) { %>
+					<% } else if ((event && event.trends[event.trends.length - 1] < 0 &&
+					!event?.invertGrowthColors) || (event &&
+					event.trends[event.trends.length - 1] > 0 &&
+					event?.invertGrowthColors)) { %>
 					<td class="negative td-trend">
 						<div class="div-trend">
 							<svg
@@ -160,7 +168,7 @@
 								/>
 								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
 							</svg>
-							<%= country.trends[country.trends.length - 1] %>%
+							<%= event.trends[event.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } else { %>
@@ -182,80 +190,12 @@
 									stroke-linecap="round"
 								/>
 							</svg>
-							<%= country.trends[country.trends.length - 1] %>%
+							<%= event.trends[event.trends.length - 1] %>%
 						</div>
 					</td>
 					<% } %>
 				</tr>
-				<% }); %> <% } else { %> <% item.metricOrEvents.forEach(function
-				(metricOrEvent, index) { %>
-				<tr>
-					<td><%= metricOrEvent.name %></td>
-					<% if (metricOrEvent.trends[metricOrEvent.trends.length - 1] > 0) { %>
-					<td class="positive td-trend">
-						<div class="div-trend">
-							<svg
-								class="trend-icon"
-								width="20"
-								height="20"
-								viewBox="0 0 20 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<circle opacity="0.1" cx="10" cy="10" r="10" fill="#00851D" />
-								<path
-									d="M13.8067 8.58756L10.94 5.72757C10.6902 5.47923 10.3523 5.33984 10 5.33984C9.64779 5.33984 9.30985 5.47923 9.06004 5.72757L6.19337 8.58756C6.06921 8.71247 5.99951 8.88144 5.99951 9.05756C5.99951 9.23369 6.06921 9.40265 6.19337 9.52756C6.25535 9.59005 6.32908 9.63964 6.41032 9.67349C6.49156 9.70734 6.5787 9.72476 6.66671 9.72476C6.75471 9.72476 6.84185 9.70734 6.92309 9.67349C7.00433 9.63964 7.07806 9.59005 7.14004 9.52756L9.33337 7.33423V14.6676C9.33337 14.8444 9.40361 15.0139 9.52863 15.139C9.65366 15.264 9.82323 15.3342 10 15.3342C10.1768 15.3342 10.3464 15.264 10.4714 15.139C10.5965 15.0139 10.6667 14.8444 10.6667 14.6676V7.33423L12.86 9.52756C12.9847 9.6531 13.1541 9.72397 13.331 9.7246C13.5079 9.72522 13.6778 9.65555 13.8034 9.5309C13.9289 9.40624 13.9998 9.23683 14.0004 9.05992C14.001 8.88301 13.9314 8.7131 13.8067 8.58756Z"
-									fill="#00851D"
-								/>
-							</svg>
-							<%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
-						</div>
-					</td>
-					<% } else if (metricOrEvent.trends[metricOrEvent.trends.length - 1]<
-					0) { %>
-					<td class="negative td-trend">
-						<div class="div-trend">
-							<svg
-								class="trend-icon"
-								width="20"
-								height="20"
-								viewBox="0 0 16 16"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M11.0456 8.37763C10.996 8.32764 10.937 8.28796 10.872 8.26089C10.807 8.23381 10.7373 8.21987 10.6669 8.21987C10.5965 8.21987 10.5268 8.23381 10.4618 8.26089C10.3968 8.28796 10.3378 8.32764 10.2882 8.37763L8.53356 10.1323V4.79896C8.53356 4.65751 8.47737 4.52185 8.37735 4.42183C8.27733 4.32182 8.14167 4.26562 8.00023 4.26562C7.85878 4.26562 7.72312 4.32182 7.6231 4.42183C7.52308 4.52185 7.46689 4.65751 7.46689 4.79896V10.1323L5.71223 8.37763C5.66265 8.32764 5.60366 8.28796 5.53867 8.26089C5.47368 8.23381 5.40397 8.21987 5.33356 8.21987C5.26315 8.21987 5.19344 8.23381 5.12845 8.26089C5.06346 8.28796 5.00447 8.32764 4.95489 8.37763C4.85556 8.47755 4.7998 8.61273 4.7998 8.75363C4.7998 8.89453 4.85556 9.0297 4.95489 9.12963L7.24823 11.4176C7.44735 11.6179 7.71778 11.7311 8.00023 11.7323C8.28081 11.7297 8.54908 11.6166 8.74689 11.4176L11.0402 9.12963C11.1403 9.03041 11.197 8.89563 11.198 8.75473C11.199 8.61383 11.1442 8.47826 11.0456 8.37763Z"
-									fill="#D52E00"
-								/>
-								<circle opacity="0.1" cx="8" cy="8" r="8" fill="#D52E00" />
-							</svg>
-							<%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
-						</div>
-					</td>
-					<% } else { %>
-					<td class="td-trend">
-						<div class="div-trend">
-							<svg
-								class="trend-icon"
-								width="20"
-								height="20"
-								viewBox="0 0 20 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<circle opacity="0.1" cx="10" cy="10" r="10" fill="#808080" />
-								<path
-									d="M5 10H15"
-									stroke="#808080"
-									stroke-width="1.5"
-									stroke-linecap="round"
-								/></svg
-							><%= metricOrEvent.trends[metricOrEvent.trends.length - 1] %>%
-						</div>
-					</td>
-					<% } %>
-				</tr>
-				<% }); %> <% } %>
+				<% }); %>
 			</table>
 			<% } %>
 		</div>

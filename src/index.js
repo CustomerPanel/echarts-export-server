@@ -9,30 +9,13 @@ const { createCanvas } = require('canvas')
 const nodeHtmlToImage = require('node-html-to-image')
 const args = process.argv
 const styles = fs.readFileSync('src/chartTemplateStyles.css', 'utf-8')
-const { format, parseISO, parse } = require('date-fns')
-
-const mime = {
-	'image/png': 'png',
-	'image/jpeg': 'jpeg',
-	'image/gif': 'gif',
-	'application/pdf': 'pdf',
-	'image/svg+xml': 'svg',
-}
-
-const mimeReverse = {
-	png: 'image/png',
-	jpeg: 'image/jpeg',
-	gif: 'image/gif',
-	pdf: 'application/pdf',
-	svg: 'image/svg+xml',
-}
+const { format, parseISO } = require('date-fns')
 
 let chartData = {}
 
 const port = args.port || 3001
 
 echarts.setPlatformAPI({
-	// Same with the old setCanvasCreator
 	createCanvas() {
 		return createCanvas()
 	},
@@ -45,6 +28,7 @@ function processConfig(request, response, callback) {
 	if (request.method === 'GET') {
 		// Parse url parameters
 		let params = url.parse(request.url, true).query
+
 		if (!params.config) {
 			response.end(
 				JSON.stringify({
@@ -263,10 +247,10 @@ function formatSeries(series) {
 				},
 				rich: {
 					a: {
-						color: 'green',
+						color: serie.invertGrowthColors ? 'red' : 'green',
 					},
 					b: {
-						color: 'red',
+						color: serie.invertGrowthColors ? 'green' : 'red',
 					},
 					c: { color: 'black' },
 				},
@@ -378,18 +362,8 @@ http
 						)
 						series[index].metricOrEvents[indexMetric].last_value = newLastValue
 					})
-					if (serie.countries.length > 0) {
-						let formattedCountriesSeries = []
-						serie.countries.forEach((country) => {
-							formattedCountriesSeries.push(
-								serie.metricOrEvents.filter(
-									(metric) => metric.name == country
-								)[0]
-							)
-						})
-						series[index].countries = formattedCountriesSeries
-					}
 				})
+
 				const renderedHtml = ejs.render(chartTemplate, {
 					styles,
 					series,
