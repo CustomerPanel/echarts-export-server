@@ -289,6 +289,57 @@ http
 					return
 				}
 
+				const formattedSeries = []
+				config.series.forEach((serie) => {
+					if (!config.showOnlyCompletedPeriods) {
+						const solidData = Array.isArray(serie?.data) ? [...serie.data] : []
+						const dashedData = new Array(solidData.length).fill(null)
+
+						if (serie.type === 'line') {
+							dashedData[dashedData.length - 2] =
+								solidData[dashedData.length - 2]
+							dashedData[dashedData.length - 1] =
+								solidData[dashedData.length - 1]
+							solidData[solidData.length - 1] = NaN
+							formattedSeries.push({
+								...serie,
+
+								data: solidData,
+								lineStyle: { ...serie.lineStyle, type: 'solid' },
+							})
+							formattedSeries.push({
+								...serie,
+
+								data: dashedData,
+								lineStyle: { ...serie.lineStyle, type: 'dashed' },
+								itemStyle: { ...serie.itemStyle, opacity: 0.5 },
+							})
+						} else {
+							dashedData[dashedData.length - 1] =
+								solidData[dashedData.length - 1]
+							solidData[solidData.length - 1] = NaN
+
+							formattedSeries.push({
+								...serie,
+								data: solidData,
+								lineStyle: { ...serie.lineStyle, type: 'solid' },
+								stack: serie.name,
+							})
+
+							formattedSeries.push({
+								...serie,
+								data: dashedData,
+								stack: serie.name,
+								lineStyle: { ...serie.lineStyle, type: 'solid' },
+								itemStyle: { ...serie.itemStyle, opacity: 0.5 },
+							})
+						}
+					} else {
+						formattedSeries.push(serie)
+					}
+				})
+
+				config.series = formattedSeries
 				config.width = config.width || 600
 				config.height = config.height || 400
 				config.type = config.type || 'png'
