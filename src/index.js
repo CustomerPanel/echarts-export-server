@@ -290,6 +290,75 @@ http
 				}
 
 				const formattedSeries = []
+				if (config.compare_data) {
+					if (config.growthRate) {
+						formattedSeries.push({
+							...config.series[0],
+						})
+						config.compare_data.series.forEach((serie, index) => {
+							formattedSeries.push({
+								...serie,
+								name: `Previous period - ${serie.name}`,
+								lineStyle: {
+									color: '#CCCCCC',
+									type: 'dashed',
+									width: 2,
+								},
+								itemStyle: { color: '#CCCCCC' },
+								label: {
+									position: serie?.label.position,
+									show: true,
+									color: serie?.trends[index] > 0 ? 'green' : 'red',
+									align: 'center',
+
+									formatter: function (params) {
+										const dataIndex = params.dataIndex
+										const trendValue = parseFloat(
+											serie?.trends[dataIndex].toFixed(2)
+										)
+										return trendValue > 0
+											? `{a|+${trendValue}%}`
+											: trendValue < 0
+											? `{b|${trendValue}%}`
+											: `{c|${trendValue}%}`
+									},
+									rich: {
+										a: {
+											color: serie.invertGrowthColors ? 'red' : 'green',
+										},
+										b: {
+											color: serie.invertGrowthColors ? 'green' : 'red',
+										},
+										c: { color: 'black' },
+									},
+								},
+							})
+						})
+					} else {
+						formattedSeries.push({
+							...config.series[0],
+						})
+						config.compare_data.series.forEach((serie) => {
+							formattedSeries.push({
+								...serie,
+								name: `Previous period - ${serie.name}`,
+								lineStyle: {
+									color: '#CCCCCC',
+									type: 'dashed',
+									width: 2,
+								},
+								itemStyle: { color: '#CCCCCC' },
+							})
+						})
+					}
+					config.legend = {
+						...config.legend,
+						data: [
+							config.legend.data[0],
+							'Previous period - ' + config.legend.data[0],
+						],
+					}
+				}
 				config.series.forEach((serie) => {
 					if (!config.showOnlyCompletedPeriods) {
 						const solidData = Array.isArray(serie?.data) ? [...serie.data] : []
@@ -338,7 +407,6 @@ http
 						formattedSeries.push(serie)
 					}
 				})
-
 				config.series = formattedSeries
 				config.width = config.width || 600
 				config.height = config.height || 400
